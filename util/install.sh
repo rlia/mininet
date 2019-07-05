@@ -46,13 +46,13 @@ if [ "$DIST" = "Ubuntu" ] || [ "$DIST" = "Debian" ]; then
         $install lsb-release
     fi
 fi
-test -e /etc/fedora-release && DIST="Fedora"
+test -e /etc/centos-release && DIST="CentOS"
 test -e /etc/redhat-release && DIST="RedHatEnterpriseServer"
-if [ "$DIST" = "Fedora" -o "$DIST" = "RedHatEnterpriseServer" ]; then
-    install='sudo yum -y install'
-    remove='sudo yum -y erase'
-    pkginst='sudo rpm -ivh'
-    update='sudo yum'
+if [ "$DIST" = "CentOS" -o "$DIST" = "RedHatEnterpriseServer" ]; then
+    install='yum -y install'
+    remove='yum -y erase'
+    pkginst='rpm -ivh'
+    update='yum'
     # Prereqs for this script
     if ! which lsb_release &> /dev/null; then
         $install redhat-lsb-core
@@ -83,7 +83,7 @@ KERNEL_HEADERS=kernel-headers-${KERNEL_NAME}
 # Treat Raspbian as Debian
 [ "$DIST" = 'Raspbian' ] && DIST='Debian'
 
-DISTS='Ubuntu|Debian|Fedora|RedHatEnterpriseServer|SUSE LINUX'
+DISTS='Ubuntu|Debian|CentOS|RedHatEnterpriseServer|SUSE LINUX'
 if ! echo $DIST | egrep "$DISTS" >/dev/null; then
     echo "Install.sh currently only supports $DISTS."
     exit 1
@@ -149,7 +149,7 @@ function kernel_clean {
 # Install Mininet deps
 function mn_deps {
     echo "Installing Mininet dependencies"
-    if [ "$DIST" = "Fedora" -o "$DIST" = "RedHatEnterpriseServer" ]; then
+    if [ "$DIST" = "CentOS" -o "$DIST" = "RedHatEnterpriseServer" ]; then
         $install gcc make socat psmisc xterm openssh-clients iperf \
             iproute telnet python-setuptools libcgroup-tools \
             ethtool help2man pyflakes pylint python-pep8 python-pexpect
@@ -188,7 +188,7 @@ function of {
     echo "Installing OpenFlow reference implementation..."
     cd $BUILD_DIR
     $install autoconf automake libtool make gcc
-    if [ "$DIST" = "Fedora" -o "$DIST" = "RedHatEnterpriseServer" ]; then
+    if [ "$DIST" = "CentOS" -o "$DIST" = "RedHatEnterpriseServer" ]; then
         $install git pkgconfig glibc-devel
 	elif [ "$DIST" = "SUSE LINUX"  ]; then
        $install git pkgconfig glibc-devel
@@ -257,7 +257,7 @@ function of13 {
 function install_wireshark {
     if ! which wireshark; then
         echo "Installing Wireshark"
-        if [ "$DIST" = "Fedora" -o "$DIST" = "RedHatEnterpriseServer" ]; then
+        if [ "$DIST" = "CentOS" -o "$DIST" = "RedHatEnterpriseServer" ]; then
             $install wireshark wireshark-gnome
 		elif [ "$DIST" = "SUSE LINUX"  ]; then
 			$install wireshark
@@ -375,7 +375,7 @@ function ubuntuOvs {
 function ovs {
     echo "Installing Open vSwitch..."
 
-    if [ "$DIST" = "Fedora" -o "$DIST" = "RedHatEnterpriseServer" ]; then
+    if [ "$DIST" = "CentOS" -o "$DIST" = "RedHatEnterpriseServer" ]; then
         $install openvswitch openvswitch-controller
         return
     fi
@@ -446,7 +446,7 @@ function ivs {
 
     # Install dependencies
     $install gcc make
-    if [ "$DIST" = "Fedora" -o "$DIST" = "RedHatEnterpriseServer" ]; then
+    if [ "$DIST" = "CentOS" -o "$DIST" = "RedHatEnterpriseServer" ]; then
         $install git pkgconfig libnl3-devel libcap-devel openssl-devel
     else
         $install git-core pkg-config libnl-3-dev libnl-route-3-dev \
@@ -592,7 +592,7 @@ function oftest {
 function cbench {
     echo "Installing cbench..."
 
-    if [ "$DIST" = "Fedora" -o "$DIST" = "RedHatEnterpriseServer" ]; then
+    if [ "$DIST" = "CentOS" -o "$DIST" = "RedHatEnterpriseServer" ]; then
         $install net-snmp-devel libpcap-devel libconfig-devel
 	elif [ "$DIST" = "SUSE LINUX"  ]; then
 		$install net-snmp-devel libpcap-devel libconfig-devel
@@ -666,7 +666,7 @@ net.ipv6.conf.lo.disable_ipv6 = 1' | sudo tee -a /etc/sysctl.conf > /dev/null
     $install ntp
 
     # Install vconfig for VLAN example
-    if [ "$DIST" = "Fedora" -o "$DIST" = "RedHatEnterpriseServer" ]; then
+    if [ "$DIST" = "CentOS" -o "$DIST" = "RedHatEnterpriseServer" ]; then
         $install vconfig
     else
         $install vlan
@@ -706,10 +706,10 @@ function modprobe {
 }
 
 function all {
-    if [ "$DIST" = "Fedora" ]; then
-        printf "\nFedora 18+ support (still work in progress):\n"
-        printf " * Fedora 18+ has kernel 3.10 RPMS in the updates repositories\n"
-        printf " * Fedora 18+ has openvswitch 1.10 RPMS in the updates repositories\n"
+    if [ "$DIST" = "CentOS" ]; then
+        printf "\nCentOS 18+ support (still work in progress):\n"
+        printf " * CentOS 18+ has kernel 3.10 RPMS in the updates repositories\n"
+        printf " * CentOS 18+ has openvswitch 1.10 RPMS in the updates repositories\n"
         printf " * the install.sh script options [-bfnpvw] should work.\n"
         printf " * for a basic setup just try:\n"
         printf "       install.sh -fnpv\n\n"
